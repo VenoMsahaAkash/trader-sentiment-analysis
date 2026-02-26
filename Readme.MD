@@ -1,39 +1,112 @@
-Project Overview
-This project investigates whether daily crypto market sentiment (Fear, Greed, Neutral) meaningfully influences the trading performance and behaviour of on-chain traders on the Hyperliquid perpetuals exchange.
+# Bitcoin Sentiment Analysis
+
+Analyzing how the Crypto Fear & Greed Index influences trader performance on Hyperliquid.
+
+---
+
+## Project Structure
+```
 bitcoin_sentiment_analysis/
 ├── data/
-│   ├── fear_greed_index.csv       # Daily Fear & Greed Index (2,644 rows)
-│   └── historical_data.csv        # Hyperliquid trade records (211,224 rows)
+│   ├── fear_greed_index.csv
+│   └── historical_data.csv
 ├── outputs/
-│   └── sentiment_analysis_charts.png   # Auto-generated visualisation
-├── bitcoin_sentiment_analysis.ipynb    # Main analysis notebook
+│   └── sentiment_analysis_charts.png
+├── bitcoin_sentiment_analysis.ipynb
 ├── README.md
-└── WRITEUP.md                          # Methodology, insights & recommendations
+└── WRITEUP.md
+```
 
-Install all dependencies:(in bash):
-    pip install pandas numpy matplotlib seaborn jupyter
-    How to Run
-1. Clone / download the project
-bash git clone https://github.com/your-username/trader_sentiment_analysis.git
-cd trader_sentiment_analysis
-2. Place your data files
-Ensure both CSV files are in the data/ folder:
+---
+
+## Datasets
+
+| File | Rows | Description |
+|------|------|-------------|
+| `fear_greed_index.csv` | 2,644 | Daily Fear & Greed Index with classification |
+| `historical_data.csv` | 211,224 | Raw trade records from 32 Hyperliquid traders |
+
+---
+
+## Setup
+
+### Requirements
+- Python 3.8+
+- pandas, numpy, matplotlib, seaborn, jupyter
+
+### Install dependencies
+```bash
+pip install pandas numpy matplotlib seaborn jupyter
+```
+
+---
+
+## How to Run
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/your-username/bitcoin_sentiment_analysis.git
+cd bitcoin_sentiment_analysis
+```
+
+### 2. Add your data files
+Place both CSV files inside the `data/` folder:
+```
 data/fear_greed_index.csv
 data/historical_data.csv
-Create the outputs folder if it doesn't exist:
-bashmkdir -p outputs
-3. Launch the notebook
-bashjupyter notebook traderOutputs
-After running, you will find:
+```
 
+### 3. Create outputs folder
+```bash
+mkdir -p outputs
+```
 
-Console tables — Avg PnL, win rate, trade count, L/S ratio broken down by sentiment label
-Trader profile table — Segmentation by frequency and profitability type
-outputs/sentiment_analysis_charts.png — 6-panel visualisation dashboard_sentiment_analysis.ipynb
-Then run all cells via Kernel → Restart & Run All.
-Notes
+### 4. Launch the notebook
+```bash
+jupyter notebook bitcoin_sentiment_analysis.ipynb
+```
+Run all cells via **Kernel → Restart & Run All**
 
-Only 6 trade-dates overlap between the two datasets — a key limitation. Wider date coverage would strengthen all conclusions.
-L/S ratio is computed as BUY count / max(SELL count, 1) to avoid division by zero.
-Trader types: Consistent Winner (positive PnL + win-rate ≥ 50%), Lucky Winner (positive PnL + win-rate < 50%), Loser (negative PnL).
+---
+
+## What the Notebook Does
+
+| Section | Description |
+|---------|-------------|
+| 1. Data Loading | Loads both CSVs, checks shape, nulls, duplicates |
+| 2. Feature Engineering | Parses dates, builds daily per-trader metrics, L/S ratio |
+| 3. Sentiment Merge | Aggregates market-level stats and joins with sentiment labels |
+| 4. Analysis | Performance by sentiment, trader behavior, trader segmentation |
+| 5. Visualizations | 6-panel chart dashboard saved to `outputs/` |
+
+---
+
+## Output Charts
+
+The notebook generates a 6-panel dashboard saved as `outputs/sentiment_analysis_charts.png`:
+
+- Avg PnL by Sentiment
+- Avg Win Rate by Sentiment
+- Avg Daily Trades by Sentiment
+- PnL Distribution: Fear vs Greed (boxplot)
+- Avg PnL: Frequent vs Infrequent Traders
+- Trader Types (pie chart)
+
+---
+
+## Key Findings
+
+- **Fear days** produced ~8× higher collective PnL than Greed days
+- Traders placed **9 long orders per short** during Fear — and still profited
+- **78%** of profitable traders are "Lucky Winners" (positive PnL but sub-50% win rate)
+- **Frequent traders** earned 3× more on average than infrequent traders
+
+---
+
+## Limitations
+
+Only **6 trading dates** overlap between the two datasets. All findings are directional signals — not statistically conclusive. Wider date coverage would strengthen every conclusion.
+
+---
+
 
