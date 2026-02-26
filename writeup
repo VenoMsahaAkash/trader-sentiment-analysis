@@ -1,0 +1,55 @@
+# Analysis Write-Up: Bitcoin Sentiment vs Trader Performance
+
+---
+
+## Methodology
+
+**Data sources:** A 2,644-day Fear & Greed Index time series was merged with 211,224 individual trade records from Hyperliquid across 32 unique trader accounts. The sentiment index was simplified into three labels — **Fear**, **Greed**, and **Neutral** — by grouping "Extreme Fear/Fear", "Extreme Greed/Greed", and "Neutral" respectively.
+
+**Per-trader daily aggregates** were constructed for each (Account, date) pair, capturing trade count, total and average PnL, win rate (share of profitable closes), average position size in USD, and the long/short ratio (BUY fills ÷ SELL fills).
+
+**Market-level aggregates** were computed by further collapsing across all accounts per date, then merged with the sentiment label for that day. Only 6 trading dates overlapped between the two datasets, which limits statistical power — this is the primary caveat for all findings.
+
+**Trader segmentation** classified accounts as Frequent/Infrequent (above/below median trade count) and as Consistent Winner, Lucky Winner, or Loser based on combined PnL sign and win rate threshold (≥ 50%).
+
+---
+
+## Key Insights
+
+### 1. Fear days generate far higher total PnL — but fewer traders trade
+
+On the single Fear day in the merged window, the collective market PnL was **~$6.7 M**, versus an average of **~$0.84 M** across the four Greed days. This is partly volume-driven: Fear days saw roughly **12× more trades** than Greed days (133,871 vs ~10,813 avg). Individual win rates were also higher on Fear days (41.6% vs 21.9%), suggesting that at least some traders actively exploit panic-driven mispricing.
+
+### 2. Traders go heavily long during Fear — the opposite of the textbook "buy the dip" narrative
+
+The average Long/Short ratio during Fear days was **8.8**, meaning traders placed roughly 9 long orders for every 1 short — yet still recorded positive aggregate PnL. During Greed days the L/S ratio spiked even higher to **26.3**, indicating herd-like bullish positioning when sentiment is euphoric. Neutral periods showed a near-balanced L/S ratio of ~0.9.
+
+### 3. Position sizing is sentiment-sensitive
+
+Average trade size was largest under Fear ($5,927 USD) and smallest under Neutral conditions ($3,793 USD), suggesting traders are comfortable sizing up when they perceive clear directional conviction — in either direction.
+
+### 4. Most profitable traders win through volume, not accuracy
+
+The majority of profitable accounts (25 of 32) are classified as **Lucky Winners** — positive total PnL but sub-50% win rate. Only 4 accounts qualify as **Consistent Winners** (positive PnL and ≥ 50% win rate). This implies a small number of large winning trades offset many small losses — a pattern typical of trend-following or momentum strategies.
+
+### 5. Frequent traders outperform infrequent ones
+
+Accounts trading above the median frequency earned an average total PnL of **$496,528** vs **$147,032** for infrequent traders. High-frequency execution likely means faster adaptation to changing market conditions rather than mere overtrading.
+
+---
+
+## Strategy Recommendations
+
+**1. Lean into Fear-regime opportunities.** The data suggests Fear periods offer a better risk/reward environment — higher win rates, higher volume, and materially better aggregate PnL. Traders should consider maintaining or expanding exposure (with disciplined risk sizing) when the index drops below 30.
+
+**2. Be cautious during extreme Greed.** L/S ratios above 25 during Greed days indicate crowded long positioning. Historically crowded trades carry elevated reversal risk. Traders should tighten stop-losses and reduce leverage when the index exceeds 75.
+
+**3. Improve win-rate discipline.** The prevalence of Lucky Winners suggests most accounts depend on a handful of outsized wins. A more systematic approach — e.g., scaling into trending positions and cutting losses early — could convert Lucky Winners into Consistent Winners.
+
+**4. Trade more actively, but size responsibly.** The positive correlation between trade frequency and PnL is encouraging, but only if accompanied by sound position sizing. Higher frequency without a clear edge simply compounds fees and slippage.
+
+**5. Expand the dataset before acting.** With only 6 overlapping trading days, all findings above should be treated as directional hypotheses rather than statistically robust conclusions. Collecting a full year of daily trade data aligned with the sentiment index would allow meaningful hypothesis testing and more reliable strategy calibration.
+
+---
+
+*Analysis performed in Python (pandas, matplotlib). See `bitcoin_sentiment_analysis.ipynb` for full reproducible code.*
